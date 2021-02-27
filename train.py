@@ -60,7 +60,7 @@ else:
                 dropout=args.dropout, 
                 nheads=args.nb_heads, 
                 alpha=args.alpha)
-if !args.optim:
+if args.optim == 0:
     optimizer = optim.Adam(model.parameters(), 
                            lr=args.lr, 
                            weight_decay=args.weight_decay)
