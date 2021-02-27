@@ -12,6 +12,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
+from nfnets.agc import AGC
 
 from utils import load_data, accuracy
 from models import GAT, SpGAT
@@ -30,6 +31,7 @@ parser.add_argument('--nb_heads', type=int, default=8, help='Number of head atte
 parser.add_argument('--dropout', type=float, default=0.6, help='Dropout rate (1 - keep probability).')
 parser.add_argument('--alpha', type=float, default=0.2, help='Alpha for the leaky_relu.')
 parser.add_argument('--patience', type=int, default=100, help='Patience')
+parser.add_argument('--optim', type=int, default=0, help='0 for Adam, 1 for AGC')
 
 args = parser.parse_args()
 args.cuda = not args.no_cuda and torch.cuda.is_available()
@@ -58,9 +60,16 @@ else:
                 dropout=args.dropout, 
                 nheads=args.nb_heads, 
                 alpha=args.alpha)
-optimizer = optim.Adam(model.parameters(), 
-                       lr=args.lr, 
-                       weight_decay=args.weight_decay)
+if !args.optim:
+    optimizer = optim.Adam(model.parameters(), 
+                           lr=args.lr, 
+                           weight_decay=args.weight_decay)
+else:
+    optim = optim.SGD(model.parameters(),
+                     lr=args.lr,
+                     weight_decay=args.weight_decay)
+    optimizer = AGC(model.parameters(), optim) # Needs testing
+
 
 if args.cuda:
     model.cuda()
