@@ -32,7 +32,7 @@ parser.add_argument('--dropout', type=float, default=0.6, help='Dropout rate (1 
 parser.add_argument('--alpha', type=float, default=0.2, help='Alpha for the leaky_relu.')
 parser.add_argument('--patience', type=int, default=100, help='Patience')
 parser.add_argument('--optim', type=int, default=0, help='0 for Adam, 1 for AGC')
-parser.add_agument('--clip'. type=int, default=1e-2, help='Value for Gradient Clipping')
+parser.add_agument('--clip', type=int, default=1e-2, help='Value for Gradient Clipping')
 
 args = parser.parse_args()
 args.cuda = not args.no_cuda and torch.cuda.is_available()
